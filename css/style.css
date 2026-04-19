@@ -1649,3 +1649,168 @@ button { font-family: var(--font-sans); }
 @media (max-width: 400px) {
     .footer-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================
+   10. Full Responsive Pass  [SCRUM-16]
+   ============================================ */
+
+/* Ensure all interactive elements meet 44px tap target */
+@media (max-width: 820px) {
+    .btn, .nav-link, .footer-link, .social-link {
+        min-height: 44px;
+    }
+    .nav-link {
+        display:    flex;
+        align-items: center;
+    }
+
+    /* Pricing cards stacked cleanly */
+    .pricing-card--featured {
+        order: -1; /* featured card floats to top on mobile */
+    }
+
+    /* Scroll-animating elements need slightly shorter distances on small screens */
+    [data-animate="fade-up"]  { transform: translateY(20px); }
+    [data-animate="fade-left"] { transform: translateX(28px); }
+
+    /* Ensure hero stats wrap nicely */
+    .hero-stats {
+        flex-wrap: wrap;
+        row-gap:   12px;
+    }
+}
+
+/* Tablet landscape — tighten some grids */
+@media (max-width: 1024px) and (min-width: 821px) {
+    .hero-grid  { gap: 48px; }
+    .contact-grid { gap: 48px; }
+}
+
+/* Very tall screens — cap hero height */
+@media (min-height: 900px) {
+    .hero { padding-top: calc(var(--nav-height) + 80px); }
+}
+
+/* Landscape mobile */
+@media (max-width: 820px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding:    calc(var(--nav-height) + 32px) 0 48px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .hero-glow, .hero-bg-grid,
+    .floating-badge, .hamburger, .pricing-toggle,
+    .footer-social { display: none !important; }
+
+    body { background: #fff; color: #000; }
+    .hero, .features, .pricing, .contact, .footer {
+        padding: 24px 0;
+    }
+    a[href]::after { content: " (" attr(href) ")"; font-size: 10px; }
+}
+
+/* ============================================
+   11. UI Polish & Micro-interactions  [SCRUM-17]
+   ============================================ */
+
+/* Active nav link — highlight current section via JS class */
+.nav-link.active {
+    color:       var(--text-primary);
+    font-weight: 600;
+}
+.nav-link.active::after {
+    width: calc(100% - 28px);
+}
+
+/* Submit button loading state */
+.btn--loading {
+    pointer-events: none;
+    opacity:        0.75;
+}
+.btn--loading::after {
+    content:       '';
+    display:       inline-block;
+    width:         14px;
+    height:        14px;
+    border:        2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation:     spin 0.6s linear infinite;
+    flex-shrink:   0;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Focus-visible keyboard navigation outlines */
+:focus-visible {
+    outline:        2px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+.btn:focus-visible {
+    outline-offset: 4px;
+}
+
+/* Selection highlight */
+::selection {
+    background:  rgba(99,102,241,0.28);
+    color:       var(--text-primary);
+}
+
+/* Custom scrollbar (webkit) */
+::-webkit-scrollbar       { width: 7px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb {
+    background:    rgba(99,102,241,0.30);
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99,102,241,0.50);
+}
+
+/* Smooth section divider lines on all Sprint 2 sections */
+.pricing::before, .contact::before {
+    content:    '';
+    position:   absolute;
+    top:        0;
+    left:       10%;
+    right:      10%;
+    height:     1px;
+    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+
+/* Input valid state green glow */
+.form-input:valid:not(:placeholder-shown):not(:focus) {
+    border-color: rgba(52, 211, 153, 0.35);
+}
+
+/* Pricing card: subtle inner glow on hover for non-featured cards */
+.pricing-card:not(.pricing-card--featured):hover {
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Smooth page transitions — fade-in on load */
+body {
+    animation: bodyFadeIn 0.4s ease both;
+}
+@keyframes bodyFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Reduced motion — respect OS preference */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration:   0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration:  0.01ms !important;
+    }
+    .pos-mockup-wrapper { animation: none !important; }
+    .floating-badge     { animation: none !important; }
+    .badge-dot          { animation: none !important; }
+}
