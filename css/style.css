@@ -1482,3 +1482,170 @@ button { font-family: var(--font-sans); }
         padding: 28px 22px;
     }
 }
+
+/* ============================================
+   9. Footer  [SCRUM-26]
+   ============================================ */
+.footer {
+    padding-top:    90px;
+    padding-bottom: 0;
+    position:       relative;
+    border-top:     1px solid var(--border);
+}
+
+/* 4-column grid: brand | product | company | support */
+.footer-grid {
+    display:               grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap:                   60px;
+    padding-bottom:        64px;
+}
+
+/* Brand column */
+.footer-brand {
+    display:        flex;
+    flex-direction: column;
+    gap:            20px;
+}
+
+.footer-logo {
+    width: fit-content;
+}
+
+.footer-tagline {
+    font-size:   0.88rem;
+    color:       var(--text-muted);
+    line-height: 1.72;
+    max-width:   280px;
+}
+
+/* Social icon row */
+.footer-social {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+}
+
+.social-link {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    width:           36px;
+    height:          36px;
+    background:      var(--bg-card);
+    border:          1px solid var(--border);
+    border-radius:   var(--radius-md);
+    color:           var(--text-muted);
+    text-decoration: none;
+    transition:      all var(--trans-base);
+}
+.social-link:hover {
+    background:   rgba(99,102,241,0.10);
+    border-color: var(--border-accent);
+    color:        var(--text-primary);
+    transform:    translateY(-2px);
+    box-shadow:   0 4px 16px rgba(99,102,241,0.20);
+}
+
+/* Link columns */
+.footer-col {
+    display:        flex;
+    flex-direction: column;
+    gap:            16px;
+}
+
+.footer-col-title {
+    font-size:      0.72rem;
+    font-weight:    700;
+    color:          var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+}
+
+.footer-links {
+    display:        flex;
+    flex-direction: column;
+    gap:            10px;
+}
+
+.footer-link {
+    font-size:       0.86rem;
+    color:           var(--text-muted);
+    text-decoration: none;
+    transition:      color var(--trans-sm);
+    width:           fit-content;
+    position:        relative;
+}
+.footer-link::after {
+    content:     '';
+    position:    absolute;
+    bottom:      -1px;
+    left:        0;
+    width:       0;
+    height:      1px;
+    background:  var(--gradient-primary);
+    transition:  width var(--trans-base);
+}
+.footer-link:hover {
+    color: var(--text-primary);
+}
+.footer-link:hover::after {
+    width: 100%;
+}
+
+/* Bottom copyright bar */
+.footer-bottom {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding:         24px 0;
+    border-top:      1px solid var(--border);
+    gap:             16px;
+}
+
+.footer-copy {
+    font-size: 0.8rem;
+    color:     var(--text-muted);
+}
+
+.footer-legal {
+    display: flex;
+    gap:     24px;
+}
+
+.footer-legal-link {
+    font-size:       0.78rem;
+    color:           var(--text-muted);
+    text-decoration: none;
+    transition:      color var(--trans-sm);
+}
+.footer-legal-link:hover { color: var(--text-primary); }
+
+/* Footer responsive */
+@media (max-width: 960px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap:                   40px;
+    }
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+    .footer-tagline { max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap:                   32px;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align:     center;
+        gap:            12px;
+    }
+    .footer-legal { gap: 16px; }
+}
+
+@media (max-width: 400px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}
