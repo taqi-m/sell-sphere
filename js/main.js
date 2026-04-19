@@ -149,4 +149,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ------------------------------------------------
+    // [SCRUM-17] Active nav link — scroll spy
+    // Highlights the nav link for the section currently in viewport
+    // ------------------------------------------------
+    var sections = document.querySelectorAll('section[id], footer[id]');
+    var navLinksList = document.querySelectorAll('.nav-link[href^="#"]');
+
+    function updateActiveNavLink() {
+        var scrollY = window.scrollY + navbar.offsetHeight + 30;
+
+        sections.forEach(function (section) {
+            var top    = section.offsetTop;
+            var bottom = top + section.offsetHeight;
+            var id     = section.getAttribute('id');
+
+            if (scrollY >= top && scrollY < bottom) {
+                navLinksList.forEach(function (link) {
+                    link.classList.toggle(
+                        'active',
+                        link.getAttribute('href') === '#' + id
+                    );
+                });
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveNavLink, { passive: true });
+    updateActiveNavLink();
+
+    // ------------------------------------------------
+    // [SCRUM-17] Contact form — submit loading state
+    // Shows spinner on button while form submits
+    // ------------------------------------------------
+    var contactForm = document.getElementById('contactForm');
+    var submitBtn   = document.getElementById('submitBtn');
+
+    if (contactForm && submitBtn) {
+        contactForm.addEventListener('submit', function () {
+            submitBtn.classList.add('btn--loading');
+            submitBtn.textContent = 'Sending\u2026';
+        });
+    }
+
 });
