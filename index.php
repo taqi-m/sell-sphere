@@ -304,8 +304,128 @@
         </div>
     </section>
 
-    <!-- Contact Us Form — SCRUM-24 (coming next branch) -->
-    <!-- Footer          — SCRUM-26 (coming next branch) -->
+
+    <!-- ========== CONTACT SECTION — SCRUM-24 ========== -->
+    <section class="contact" id="contact" aria-label="Contact section">
+        <div class="container">
+
+            <div class="contact-grid">
+
+                <!-- Left: Info column -->
+                <div class="contact-info" data-animate="fade-up">
+                    <span class="section-tag">Get In Touch</span>
+                    <h2 class="contact-title">Ready to Transform<br>Your Business?</h2>
+                    <p class="contact-subtitle">Fill out the form and our team will get back to you within 24 hours. No pressure, just a conversation.</p>
+
+                    <div class="contact-details" aria-label="Contact information">
+                        <div class="contact-detail">
+                            <div class="contact-icon-wrap" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </div>
+                            <div class="contact-detail-text">
+                                <strong>Email</strong>
+                                <span>hello@quickpos.io</span>
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon-wrap" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.87 9.6a19.79 19.79 0 01-3.07-8.67A2 2 0 012.81 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.84a16 16 0 006.29 6.29l1.3-1.3a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                            </div>
+                            <div class="contact-detail-text">
+                                <strong>Phone</strong>
+                                <span>+1 (415) 555-0198</span>
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon-wrap" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div class="contact-detail-text">
+                                <strong>Office</strong>
+                                <span>San Francisco, CA 94105</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social proof snippet -->
+                    <div class="contact-social-proof">
+                        <div class="avatars" aria-hidden="true">
+                            <div class="avatar avatar-1">JA</div>
+                            <div class="avatar avatar-2">MK</div>
+                            <div class="avatar avatar-3">RB</div>
+                            <div class="avatar avatar-4">+</div>
+                        </div>
+                        <p>Join <strong>10,000+</strong> businesses already using QuickPOS</p>
+                    </div>
+                </div>
+
+                <!-- Right: Form column -->
+                <div class="contact-form-wrap" data-animate="fade-left">
+
+                    <?php if (isset($_GET['error'])): ?>
+                    <div class="form-alert form-alert--error" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Please fill in all required fields correctly and try again.
+                    </div>
+                    <?php endif; ?>
+
+                    <form class="contact-form" id="contactForm"
+                          action="contact.php" method="POST" novalidate
+                          aria-label="Contact form">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="contact-name">
+                                    Full Name <span class="required" aria-label="required">*</span>
+                                </label>
+                                <input class="form-input" type="text" id="contact-name" name="name"
+                                       placeholder="John Smith" required autocomplete="name"
+                                       value="<?php echo htmlspecialchars($_GET['name'] ?? ''); ?>">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="contact-email">
+                                    Email Address <span class="required" aria-label="required">*</span>
+                                </label>
+                                <input class="form-input" type="email" id="contact-email" name="email"
+                                       placeholder="john@company.com" required autocomplete="email"
+                                       value="<?php echo htmlspecialchars($_GET['email'] ?? ''); ?>">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="contact-business">Business Name</label>
+                            <input class="form-input" type="text" id="contact-business" name="business"
+                                   placeholder="Your Company Ltd." autocomplete="organization">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="contact-message">
+                                Message <span class="required" aria-label="required">*</span>
+                            </label>
+                            <textarea class="form-input form-textarea" id="contact-message" name="message"
+                                      placeholder="Tell us about your business and what you're looking for..."
+                                      rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full btn-lg" id="submitBtn">
+                            Send Message
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+
+                        <p class="form-privacy">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            Your data is secure. We'll never share your information.
+                        </p>
+                    </form>
+                </div>
+
+            </div><!-- /.contact-grid -->
+        </div><!-- /.container -->
+    </section>
+
+    <!-- Footer — SCRUM-26 (coming next branch) -->
 
     <script src="js/main.js"></script>
 </body>
