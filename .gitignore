@@ -1,0 +1,58 @@
+# ============================================
+# QuickPOS — .gitignore
+# ============================================
+
+# --- Local-only project files (do NOT commit) ---
+AGENT_CONTEXT.md
+PROJECT_DETAILS.md
+SPM-Assignment-4.pdf
+implementation_plan.md
+s.md
+*.pdf
+
+# --- PHP logs and cache ---
+*.log
+*.cache
+error_log
+
+# --- OS generated files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# --- IDE and editor files ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+
+# --- Environment files ---
+.env
+.env.local
+.env.*.local
+
+# --- PHP dependencies ---
+vendor/
+
+# --- Node (if any tooling added later) ---
+node_modules/
+package-lock.json
+
+# --- Build artifacts ---
+/build/
+/dist/
+
+# --- Uploaded files ---
+uploads/
+
+# --- PHP session files ---
+sessions/
