@@ -120,4 +120,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ------------------------------------------------
+    // [SCRUM-23] Pricing — Monthly / Annual billing toggle
+    // ------------------------------------------------
+    var billingToggle  = document.getElementById('billingToggle');
+    var toggleMonthly  = document.getElementById('toggleMonthly');
+    var toggleAnnual   = document.getElementById('toggleAnnual');
+    var priceAmounts   = document.querySelectorAll('.price-amount[data-monthly]');
+
+    if (billingToggle) {
+        billingToggle.addEventListener('click', function () {
+            var isAnnual = this.getAttribute('aria-checked') === 'true';
+            var setAnnual = !isAnnual;
+
+            this.setAttribute('aria-checked', String(setAnnual));
+
+            toggleMonthly.classList.toggle('toggle-label--active', !setAnnual);
+            toggleAnnual.classList.toggle('toggle-label--active',   setAnnual);
+
+            priceAmounts.forEach(function (el) {
+                var target = setAnnual
+                    ? el.getAttribute('data-annual')
+                    : el.getAttribute('data-monthly');
+                if (target) {
+                    el.textContent = target;
+                }
+            });
+        });
+    }
+
 });
