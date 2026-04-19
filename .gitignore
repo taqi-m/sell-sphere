@@ -7,7 +7,8 @@ AGENT_CONTEXT.md
 PROJECT_DETAILS.md
 SPM-Assignment-4.pdf
 implementation_plan.md
-s.md
+*.md
+!README.md
 *.pdf
 
 # --- PHP logs and cache ---
