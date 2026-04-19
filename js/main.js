@@ -1,93 +1,163 @@
 // ============================================
-// QuickPOS Landing Page — Main JavaScript
+// QuickPOS v2.0 — Main JavaScript
 // ============================================
-// Responsibilities:
-//  [SCRUM-20] Sticky navbar on scroll (glassmorphism effect)
-//  [SCRUM-20] Mobile hamburger menu toggle
-//  [SCRUM-20] Smooth scroll for all anchor links
-//  [SCRUM-22] Scroll-triggered card animations via IntersectionObserver
+// Responsibilities (SCRUM-39 — JS Restoration):
+//   [SCRUM-33] Sticky navbar glassmorphism on scroll
+//   [SCRUM-33] Mobile hamburger menu toggle
+//   [SCRUM-33] Smooth scroll for all anchor links
+//   [SCRUM-33] Scroll spy — nav link active state
+//   [SCRUM-36] Pricing monthly/annual toggle
+//   [SCRUM-34] Scroll-triggered card animations (IntersectionObserver)
+//   [SCRUM-37] Form submit button loading state
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function () {
 
     // ------------------------------------------------
-    // [SCRUM-20] Sticky Navbar — glassmorphism on scroll
+    // [SCRUM-33] Sticky Navbar — glassmorphism on scroll
     // ------------------------------------------------
     const navbar = document.getElementById('navbar');
 
     function handleNavbarScroll() {
-        if (window.scrollY > 20) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+        if (navbar) {
+            navbar.classList.toggle('scrolled', window.scrollY > 20);
         }
     }
 
     window.addEventListener('scroll', handleNavbarScroll, { passive: true });
-    handleNavbarScroll(); // run once on load in case page is already scrolled
+    handleNavbarScroll();
 
     // ------------------------------------------------
-    // [SCRUM-20] Mobile Hamburger Menu Toggle
+    // [SCRUM-33] Mobile Hamburger Menu Toggle
     // ------------------------------------------------
-    const hamburger = document.getElementById('hamburger');
-    const navLinks  = document.getElementById('navLinks');
+    const hamburger  = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon   = document.getElementById('menuIcon');
 
-    hamburger.addEventListener('click', function () {
-        const isOpen = navLinks.classList.toggle('open');
-        hamburger.classList.toggle('active', isOpen);
-        hamburger.setAttribute('aria-expanded', String(isOpen));
-
-        // Prevent body scroll when menu is open
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
-
-    // Close mobile nav when a link is clicked
-    navLinks.querySelectorAll('.nav-link').forEach(function (link) {
-        link.addEventListener('click', function () {
-            navLinks.classList.remove('open');
-            hamburger.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
+    if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', function () {
+            const isOpen = mobileMenu.classList.toggle('open');
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+            if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+            document.body.style.overflow = isOpen ? 'hidden' : '';
         });
-    });
 
-    // Close mobile nav on outside click
-    document.addEventListener('click', function (e) {
-        if (
-            navLinks.classList.contains('open') &&
-            !navbar.contains(e.target)
-        ) {
-            navLinks.classList.remove('open');
-            hamburger.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-    });
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                mobileMenu.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                if (menuIcon) menuIcon.textContent = 'menu';
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function (e) {
+            if (
+                mobileMenu.classList.contains('open') &&
+                navbar && !navbar.contains(e.target)
+            ) {
+                mobileMenu.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                if (menuIcon) menuIcon.textContent = 'menu';
+                document.body.style.overflow = '';
+            }
+        });
+    }
 
     // ------------------------------------------------
-    // [SCRUM-20] Smooth Scroll for Anchor Links
+    // [SCRUM-33] Smooth Scroll for Anchor Links
     // ------------------------------------------------
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
-            if (href === '#') return;
-
+            if (!href || href === '#') return;
             const target = document.querySelector(href);
             if (!target) return;
-
             e.preventDefault();
-
-            const navHeight    = navbar.offsetHeight;
+            const navHeight    = navbar ? navbar.offsetHeight : 0;
             const targetTop    = target.getBoundingClientRect().top + window.scrollY;
             const scrollTarget = targetTop - navHeight - 16;
-
             window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
         });
     });
 
     // ------------------------------------------------
-    // [SCRUM-22] Scroll-triggered entrance animations
-    // Uses IntersectionObserver for performance
+    // [SCRUM-33] Scroll Spy — Active Nav Link
+    // ------------------------------------------------
+    const spyLinks   = document.querySelectorAll('.nav-link-spy');
+    const spySections = ['features', 'pricing', 'contact'].map(function (id) {
+        return document.getElementById(id);
+    }).filter(Boolean);
+
+    function updateScrollSpy() {
+        const scrollMid = window.scrollY + (window.innerHeight / 3);
+        let currentId = '';
+        spySections.forEach(function (section) {
+            if (section.offsetTop <= scrollMid) {
+                currentId = section.id;
+            }
+        });
+        spyLinks.forEach(function (link) {
+            const active = link.dataset.section === currentId;
+            link.classList.toggle('active', active);
+            if (active) {
+                link.style.color = '#1A56DB';
+                link.style.fontWeight = '600';
+            } else {
+                link.style.color = '';
+                link.style.fontWeight = '';
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateScrollSpy, { passive: true });
+    updateScrollSpy();
+
+    // ------------------------------------------------
+    // [SCRUM-36] Pricing Toggle — Monthly / Annual
+    // ------------------------------------------------
+    const toggleMonthly = document.getElementById('toggleMonthly');
+    const toggleAnnual  = document.getElementById('toggleAnnual');
+    const pricesMonthly = document.querySelectorAll('.price-monthly');
+    const pricesAnnual  = document.querySelectorAll('.price-annual');
+
+    function setMonthly() {
+        pricesMonthly.forEach(function (el) { el.style.display = 'inline'; });
+        pricesAnnual.forEach(function (el)  { el.style.display = 'none'; });
+        if (toggleMonthly) {
+            toggleMonthly.classList.add('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+            toggleMonthly.classList.remove('text-outline');
+            toggleMonthly.setAttribute('aria-pressed', 'true');
+        }
+        if (toggleAnnual) {
+            toggleAnnual.classList.remove('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+            toggleAnnual.classList.add('text-outline');
+            toggleAnnual.setAttribute('aria-pressed', 'false');
+        }
+    }
+
+    function setAnnual() {
+        pricesMonthly.forEach(function (el) { el.style.display = 'none'; });
+        pricesAnnual.forEach(function (el)  { el.style.display = 'inline'; });
+        if (toggleAnnual) {
+            toggleAnnual.classList.add('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+            toggleAnnual.classList.remove('text-outline');
+            toggleAnnual.setAttribute('aria-pressed', 'true');
+        }
+        if (toggleMonthly) {
+            toggleMonthly.classList.remove('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+            toggleMonthly.classList.add('text-outline');
+            toggleMonthly.setAttribute('aria-pressed', 'false');
+        }
+    }
+
+    if (toggleMonthly) toggleMonthly.addEventListener('click', setMonthly);
+    if (toggleAnnual)  toggleAnnual.addEventListener('click', setAnnual);
+
+    // ------------------------------------------------
+    // [SCRUM-34] Scroll-Triggered Animations (IntersectionObserver)
     // ------------------------------------------------
     const animElements = document.querySelectorAll('[data-animate]');
 
@@ -98,97 +168,40 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (entry.isIntersecting) {
                         const delay = parseInt(entry.target.dataset.delay || '0', 10);
                         setTimeout(function () {
-                            entry.target.classList.add('animated');
+                            entry.target.style.opacity    = '1';
+                            entry.target.style.transform  = 'translateY(0)';
                         }, delay);
                         observer.unobserve(entry.target);
                     }
                 });
             },
-            {
-                threshold:  0.12,
-                rootMargin: '0px 0px -48px 0px'
-            }
+            { threshold: 0.10, rootMargin: '0px 0px -48px 0px' }
         );
 
         animElements.forEach(function (el) {
+            el.style.opacity   = '0';
+            el.style.transform = 'translateY(24px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
     } else {
-        // Fallback: show all elements immediately if IO not supported
         animElements.forEach(function (el) {
-            el.classList.add('animated');
+            el.style.opacity  = '1';
+            el.style.transform = 'translateY(0)';
         });
     }
 
     // ------------------------------------------------
-    // [SCRUM-23] Pricing — Monthly / Annual billing toggle
+    // [SCRUM-37] Form Submit — Loading State
     // ------------------------------------------------
-    var billingToggle  = document.getElementById('billingToggle');
-    var toggleMonthly  = document.getElementById('toggleMonthly');
-    var toggleAnnual   = document.getElementById('toggleAnnual');
-    var priceAmounts   = document.querySelectorAll('.price-amount[data-monthly]');
-
-    if (billingToggle) {
-        billingToggle.addEventListener('click', function () {
-            var isAnnual = this.getAttribute('aria-checked') === 'true';
-            var setAnnual = !isAnnual;
-
-            this.setAttribute('aria-checked', String(setAnnual));
-
-            toggleMonthly.classList.toggle('toggle-label--active', !setAnnual);
-            toggleAnnual.classList.toggle('toggle-label--active',   setAnnual);
-
-            priceAmounts.forEach(function (el) {
-                var target = setAnnual
-                    ? el.getAttribute('data-annual')
-                    : el.getAttribute('data-monthly');
-                if (target) {
-                    el.textContent = target;
-                }
-            });
-        });
-    }
-
-    // ------------------------------------------------
-    // [SCRUM-17] Active nav link — scroll spy
-    // Highlights the nav link for the section currently in viewport
-    // ------------------------------------------------
-    var sections = document.querySelectorAll('section[id], footer[id]');
-    var navLinksList = document.querySelectorAll('.nav-link[href^="#"]');
-
-    function updateActiveNavLink() {
-        var scrollY = window.scrollY + navbar.offsetHeight + 30;
-
-        sections.forEach(function (section) {
-            var top    = section.offsetTop;
-            var bottom = top + section.offsetHeight;
-            var id     = section.getAttribute('id');
-
-            if (scrollY >= top && scrollY < bottom) {
-                navLinksList.forEach(function (link) {
-                    link.classList.toggle(
-                        'active',
-                        link.getAttribute('href') === '#' + id
-                    );
-                });
-            }
-        });
-    }
-
-    window.addEventListener('scroll', updateActiveNavLink, { passive: true });
-    updateActiveNavLink();
-
-    // ------------------------------------------------
-    // [SCRUM-17] Contact form — submit loading state
-    // Shows spinner on button while form submits
-    // ------------------------------------------------
-    var contactForm = document.getElementById('contactForm');
-    var submitBtn   = document.getElementById('submitBtn');
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn   = document.getElementById('submitBtn');
 
     if (contactForm && submitBtn) {
         contactForm.addEventListener('submit', function () {
-            submitBtn.classList.add('btn--loading');
-            submitBtn.textContent = 'Sending\u2026';
+            submitBtn.disabled     = true;
+            submitBtn.textContent  = 'Sending...';
+            submitBtn.style.opacity = '0.7';
         });
     }
 
